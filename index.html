@@ -19,8 +19,6 @@
 	var ipLat;
 	var browserLong;
 	var browserLat;
-	var API_KEY = "AIzaSyDOER-J7d9gtTW3xGLSedkERWDqP62d8iU";
-	var secondSearch = false;
 
 	/* Wait for all fields to load and then wait for both 
 	 *
@@ -50,8 +48,6 @@
 				haversine();
 
 				findNearestComicShops( ipLong, ipLat, true );
-				secondSearch = true;
-				findNearestComicShops( browserLong, browserLat, false);
 			}
 		)
 	);
@@ -94,6 +90,7 @@
 		document.getElementById("browserLat").innerHTML = browserLat;
 
 		getWeather( browserLong, browserLat, false );
+		findNearestComicShops( browserLong, browserLat, false);
 	}
 
 	// OPENWEATHERMAP API
@@ -125,59 +122,77 @@
 	// GOOGLE PLACES API
 	var ipMap;
 	var browserMap;
-	var currentMap;
+	//var map;
 	function findNearestComicShops( longitude, latitude, ipLoc ) {
 		var service;
-		var loc = new  google.maps.LatLng( latitude, longitude );
-		var req = {
+		var loc;
+		var req;
+
+		// FOR IP COORDS
+		loc = new  google.maps.LatLng( ipLat, ipLong );
+		req = {
 			location: loc,
-			radius: '10000',
+			radius: '5000',
 			name: 'comics'
 		};
-		var map;
-		if( ipLoc ) {
-			ipMap = new google.maps.Map(document.getElementById('ipMap'), {
-				center: loc,
-				zoom: 14
-			});
-			service = new google.maps.places.PlacesService(ipMap);
-		}
-		else {
-			browserMap = new google.maps.Map(document.getElementById('browserMap'), {
-				center: loc,
-				zoom: 14
-			});
-			service = new google.maps.places.PlacesService(browserMap);
-		}
-  		service.nearbySearch(req, mapCallback);
+		
+		ipMap = new google.maps.Map(document.getElementById('ipMap'), {
+			center: loc,
+			zoom: 13
+		});
+		service = new google.maps.places.PlacesService(ipMap);
+  		ipResults = service.nearbySearch(req, ipMapCallback);
+
+  		// FOR BROWSER COORDS
+  		loc = new  google.maps.LatLng( browserLat, browserLong );
+		req = {
+			location: loc,
+			radius: '5000',
+			name: 'comics'
+		};
+
+  		browserMap = new google.maps.Map(document.getElementById('browserMap'), {
+			center: loc,
+			zoom: 13
+		});
+		service = new google.maps.places.PlacesService(browserMap);
+		browserResults = service.nearbySearch(req, browserMapCallback);
 	}
 
-	function mapCallback( results, status ) {
-		
+	function ipMapCallback( results, status ) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
-		      createMarker(results[i]);
+		      createMarker(results[i], ipMap);
     		}
   		}
 	}
 
-	function createMarker(place) {
-	  var map = ipMap;
-	  if( secondSearch ) {
-	  	map = browserMap;
-	  }
+	function browserMapCallback( results, status ) {
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+		    for (var i = 0; i < results.length; i++) {
+		      var place = results[i];
+		      createMarker(results[i], browserMap);
+    		}
+  		}
+	}
 
-	  var placeLoc = place.geometry.location;
-	  var marker = new google.maps.Marker({
-	    map: map,
-	    position: place.geometry.location
-	  });
+	function createMarker(place, map) {
+		var infowindow = new google.maps.InfoWindow(
+		{ 
+			size: new google.maps.Size(300,150)
+		});
 
-	  google.maps.event.addListener(marker, 'click', function() {
-	    infowindow.setContent(place.name);
-	    infowindow.open(map, this);
-	  });
+		var placeLoc = place.geometry.location;
+		var marker = new google.maps.Marker({
+			map: map,
+			position: place.geometry.location
+		});
+
+		google.maps.event.addListener(marker, 'click', function() {
+			infowindow.setContent(place.name);
+			infowindow.open(map, this);
+		});
 	}
 
 	google.maps.event.addDomListener( window, 'load', findNearestComicShops );
@@ -237,6 +252,6 @@
 	<i>Geo IP Information provided by <a href="http://www.telize.com/">Telize</a></i><br>
 	<i>Geo Browser Information provided by <a href="http://dev.w3.org/geo/api/spec-source.html">W3C Geolocation API</a></i><br>
 	<i>Weather Information provided by <a href="http://openweathermap.org/api">OpenWeatherMap</a></i><br>
-	<i>Places Information provided by <a href="https://developers.google.com/maps/documentation/javascript/places">Google Maps Javascript API</a></i><br>
+	<i>Places Information provided by <a href="https://developers.google.com/maps/documentation/javascript/places">Google Maps Javascript Places API</a></i><br>
 </body>
 </html>
