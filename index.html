@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript">
+		// script goes here
+		//TODO: 
+		// 1: IP location using TELIZE
+		// 2: Browser location using WC3 GEOLOCATION API 
+		// 3: Weather based on TELIZE
+		// 4: Weather based on WC3 GEOLOCATION API
+		// 5: Compare Distances with haversine formula
+
+		var ip;
+		var ipLong;
+		var ipLat;
+		var browserLong;
+		var browserLat;
+
+		//run those functions!
+		window.onload = function main(){
+			getTelizeLocation();
+			getW3CLocation();
+			getWeather(ipLong, ipLat, true);
+		};
+
+		function getTelizeLocation() {
+			var xmlhttp;
+			xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				if( xmlhttp.readyState == 4 && xmlhttp.status == 200 ) {
+					var json = JSON.parse( xmlhttp.responseText );
+
+					ip = json.ip;
+					ipLong = json.longitude;
+					ipLat = json.latitude;
+					document.getElementById("ipAddr").innerHTML = ip;
+					document.getElementById("ipLong").innerHTML = ipLong;
+					document.getElementById("ipLat").innerHTML = ipLat;
+				}
+			};
+			xmlhttp.open( "GET", "http://www.telize.com/geoip", false); // not asynchronous...
+			xmlhttp.send();
+		}
+
+		function getW3CLocation() {
+			navigator.geolocation.getCurrentPosition( W3CSetValues );
+		}
+
+		function W3CSetValues( position ) {
+			browserLong = position.coords.longitude;
+			browserLat = position.coords.latitude;
+			document.getElementById("browserLong").innerHTML = browserLong;
+			document.getElementById("browserLat").innerHTML = browserLat;
+
+			haversine();
+			getWeather( browserLong, browserLat, false );
+		}
+
+		function getWeather(longitude, latitude, ipLoc) {
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+				var json = JSON.parse( xmlhttp.responseText );
+
+				if( ipLoc ) {
+					document.getElementById("ipTemp").innerHTML = json.main.temp;
+					document.getElementById("ipWind").innerHTML = json.wind.speed;
+				}
+				else {
+					document.getElementById("browserTemp").innerHTML = json.main.temp;
+					document.getElementById("browserWind").innerHTML = json.wind.speed;
+				}
+			};
+			xmlhttp.open( "GET", "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=imperial");
+			xmlhttp.send();
+		}
+
+		function haversine() {
+			// based on http://www.movable-type.co.uk/scripts/latlong.html
+			var long1 = ipLong;
+			var long2 = browserLong;
+			var lat1 = ipLat;
+			var lat2 = browserLat;
+
+			var R = 6371; // earth's radius in kilometers
+			var lat1Rads = toRadians( lat1 );
+			var lat2Rads = toRadians( lat2 );
+			var deltaLat = toRadians( lat2 - lat1 );
+			var deltaLong = toRadians( long2 - long1 );
+
+			var a = Math.sin( deltaLat / 2 ) * Math.sin( deltaLat / 2 ) +
+					Math.cos( lat1Rads) * Math.cos ( lat2Rads ) *
+					Math.sin( deltaLong / 2 ) * Math.sin( deltaLong / 2 );
+			var c = 2 * Math.atan2( Math.sqrt( a ), Math.sqrt( 1 - a ) ); 
+			var d = R * c;
+
+			document.getElementById("diffDist").innerHTML = d;
+		}
+
+		function toRadians( angle ) {
+			return angle * Math.PI / 180;
+		}
+	</script>
+</head>
+<body>
+	Difference between locations: <span id = "diffDist"></span>km<br>
+	<hr>
+	<div id = "ipLoc">
+	Location determined by IP (<span id = "ipAddr"></span>):<br>
+	Longitude: <span id = "ipLong"></span><br>
+	Latitude: <span id = "ipLat"></span><br>
+	<br>
+	Nearby Weather:<br>
+	Temperature: <span id = "ipTemp"></span>F<br>
+	Wind Speed: <span id = "ipWind"></span>mph<br>
+	<br>
+	TODO: Provide a second piece of location specific data<br>
+	</div>
+	<hr>
+	<div id = "browserLoc">
+	Location reported by browser:<br>
+	Longitude: <span id = "browserLong"></span><br>
+	Latitude: <span id = "browserLat"></span><br>
+	<br>
+	Nearby Weather:<br>
+	Temperature: <span id = "browserTemp"></span>F<br>
+	Wind Speed: <span id = "browserWind"></span>mph<br>
+	<br>
+	TODO: Provide a second piece of location specific data<br>
+	</div>
+	<hr>
+	<i>TODO: Cite used APIs here</i>
+</body>
+</html>
