@@ -23,7 +23,7 @@
 	/* Wait for all fields to load and then wait for both 
 	 *
 	 */
-	$( document ).ready(
+	//$( document ).ready(
 		$.when( getTelizeLocation(), getW3CLocation() ).done( 
 			// <https://stackoverflow.com/questions/3709597/wait-until-all-jquery-ajax-requests-are-done>
 			/* the code here will be executed when both ajax requests resolve.
@@ -43,14 +43,12 @@
 				document.getElementById("ipLong").innerHTML = ipLong;
 				document.getElementById("ipLat").innerHTML = ipLat;
 
-				console.log( ipLat + ", " + ipLong + "; " + browserLat + ", " + browserLong );
-
+				haversine();
 				getWeather( ipLong, ipLat, true );
-
 				findNearestComicShops( true );
 			}
-		)
-	);
+		);
+	//);
 
 	// TELIZE GEOLOCATION API
 	function getTelizeLocation() {
@@ -207,6 +205,10 @@
 		// based on http://www.movable-type.co.uk/scripts/latlong.html
 
 		//console.log( ipLat + ", " + ipLong + "; " + browserLat + ", " + browserLong );
+		if( ipLat == undefined || browserLat == undefined ) {
+			return;
+		}
+
 		var R = 6371; // earth's radius in kilometers
 		var lat1Rads = toRadians( ipLat );
 		var lat2Rads = toRadians( browserLat );
