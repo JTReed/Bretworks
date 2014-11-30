@@ -1,105 +1,125 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script type="text/javascript">
-		// script goes here
-		//TODO: 
-		// 1: IP location using TELIZE
-		// 2: Browser location using WC3 GEOLOCATION API 
-		// 3: Weather based on TELIZE
-		// 4: Weather based on WC3 GEOLOCATION API
-		// 5: Compare Distances with haversine formula
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+	// TODO: One more piece of location info
 
-		var ip;
-		var ipLong;
-		var ipLat;
-		var browserLong;
-		var browserLat;
+	var ip;
+	var ipLong;
+	var ipLat;
+	var browserLong;
+	var browserLat;
 
-		//run those functions!
-		window.onload = function main(){
-			getTelizeLocation();
-			getW3CLocation();
-			getWeather(ipLong, ipLat, true);
-		};
+	/* Wait for all fields to load and then wait for both 
+	 *
+	 */
+	$( document ).ready(
+		$.when( getTelizeLocation(), getW3CLocation() ).done( 
+			// <https://stackoverflow.com/questions/3709597/wait-until-all-jquery-ajax-requests-are-done>
+			/* the code here will be executed when both ajax requests resolve.
+    		 * ipAjaxResp and w3cAjaxresp are lists of length 3 containing the response text,
+    		 * status, and jqXHR object for each of the two ajax calls respectively.
+    		 * Need to wait until both done so that haversine() has all needed info
+			 */
+			function( ipAjaxResp, w3cAjaxResp ) {
+				// fields assigned for ip side here because info taken directly from ajax call
+				var resp = ipAjaxResp[0]; 
 
-		function getTelizeLocation() {
-			var xmlhttp;
-			xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if( xmlhttp.readyState == 4 && xmlhttp.status == 200 ) {
-					var json = JSON.parse( xmlhttp.responseText );
+				ip = resp.ip;
+				ipLong = resp.longitude;
+				ipLat = resp.latitude;
 
-					ip = json.ip;
-					ipLong = json.longitude;
-					ipLat = json.latitude;
-					document.getElementById("ipAddr").innerHTML = ip;
-					document.getElementById("ipLong").innerHTML = ipLong;
-					document.getElementById("ipLat").innerHTML = ipLat;
-				}
-			};
-			xmlhttp.open( "GET", "http://www.telize.com/geoip", false); // not asynchronous...
-			xmlhttp.send();
-		}
+				document.getElementById("ipAddr").innerHTML = ip;
+				document.getElementById("ipLong").innerHTML = ipLong;
+				document.getElementById("ipLat").innerHTML = ipLat;
+				getWeather( ipLong, ipLat, true );
 
-		function getW3CLocation() {
-			navigator.geolocation.getCurrentPosition( W3CSetValues );
-		}
+				// now that all vars are assigned - we can call haversine()
+				haversine();
+			}
+		)
+	);
 
-		function W3CSetValues( position ) {
-			browserLong = position.coords.longitude;
-			browserLat = position.coords.latitude;
-			document.getElementById("browserLong").innerHTML = browserLong;
-			document.getElementById("browserLat").innerHTML = browserLat;
+	function getTelizeLocation() {
+		// return $.ajax response for $.when
+		/* Telize fields of interest (JSON)
+		 * - ip
+		 * - longitude
+		 * - latitude
+		 */
+		return $.ajax(
+		{
+    		type: "GET",
+    		url: "http://www.telize.com/geoip",
+    		dataType: "json"
+		});
+	}
 
-			haversine();
-			getWeather( browserLong, browserLat, false );
-		}
+	function getW3CLocation() {
+		/* W3C Fields of interest:
+		 * - position.coords.longitude
+		 * - position.coords.latitude
+		 */
+		navigator.geolocation.getCurrentPosition( W3CSetValues );
+	}
 
-		function getWeather(longitude, latitude, ipLoc) {
-			var xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				var json = JSON.parse( xmlhttp.responseText );
+	function W3CSetValues( position ) {
+		browserLong = position.coords.longitude;
+		browserLat = position.coords.latitude;
 
+		document.getElementById("browserLong").innerHTML = browserLong;
+		document.getElementById("browserLat").innerHTML = browserLat;
+
+		getWeather( browserLong, browserLat, false );
+	}
+
+	function getWeather(longitude, latitude, ipLoc) {
+		// return $.ajax response for $.when
+		/* openweathermap fields of interest
+		 * - main.temp
+		 * - wind.speed
+		 */ 
+		return $.ajax(
+		{
+			type: "GET",
+			url: "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=imperial",
+			dataType: "json"
+		}).done( 
+			function( ajaxResp ) {
 				if( ipLoc ) {
-					document.getElementById("ipTemp").innerHTML = json.main.temp;
-					document.getElementById("ipWind").innerHTML = json.wind.speed;
+					document.getElementById("ipTemp").innerHTML = ajaxResp.main.temp;
+					document.getElementById("ipWind").innerHTML = ajaxResp.wind.speed;
 				}
 				else {
-					document.getElementById("browserTemp").innerHTML = json.main.temp;
-					document.getElementById("browserWind").innerHTML = json.wind.speed;
+					document.getElementById("browserTemp").innerHTML = ajaxResp.main.temp;
+					document.getElementById("browserWind").innerHTML = ajaxResp.wind.speed;
 				}
-			};
-			xmlhttp.open( "GET", "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=imperial");
-			xmlhttp.send();
-		}
+			}
+		);
+	}
 
-		function haversine() {
-			// based on http://www.movable-type.co.uk/scripts/latlong.html
-			var long1 = ipLong;
-			var long2 = browserLong;
-			var lat1 = ipLat;
-			var lat2 = browserLat;
+	function haversine() {
+		// based on http://www.movable-type.co.uk/scripts/latlong.html
+		var R = 6371; // earth's radius in kilometers
+		var lat1Rads = toRadians( ipLat );
+		var lat2Rads = toRadians( browserLat );
+		var deltaLat = toRadians( browserLat - ipLat );
+		var deltaLong = toRadians( browserLong - ipLong );
 
-			var R = 6371; // earth's radius in kilometers
-			var lat1Rads = toRadians( lat1 );
-			var lat2Rads = toRadians( lat2 );
-			var deltaLat = toRadians( lat2 - lat1 );
-			var deltaLong = toRadians( long2 - long1 );
+		var a = Math.sin( deltaLat / 2 ) * Math.sin( deltaLat / 2 ) +
+				Math.cos( lat1Rads) * Math.cos ( lat2Rads ) *
+				Math.sin( deltaLong / 2 ) * Math.sin( deltaLong / 2 );
+		var c = 2 * Math.atan2( Math.sqrt( a ), Math.sqrt( 1 - a ) ); 
+		var d = R * c;
 
-			var a = Math.sin( deltaLat / 2 ) * Math.sin( deltaLat / 2 ) +
-					Math.cos( lat1Rads) * Math.cos ( lat2Rads ) *
-					Math.sin( deltaLong / 2 ) * Math.sin( deltaLong / 2 );
-			var c = 2 * Math.atan2( Math.sqrt( a ), Math.sqrt( 1 - a ) ); 
-			var d = R * c;
+		document.getElementById("diffDist").innerHTML = d;
+	}
 
-			document.getElementById("diffDist").innerHTML = d;
-		}
-
-		function toRadians( angle ) {
-			return angle * Math.PI / 180;
-		}
-	</script>
+	function toRadians( angle ) {
+		return angle * Math.PI / 180;
+	}
+</script>
 </head>
 <body>
 	Difference between locations: <span id = "diffDist"></span>km<br>
@@ -128,6 +148,8 @@
 	TODO: Provide a second piece of location specific data<br>
 	</div>
 	<hr>
-	<i>TODO: Cite used APIs here</i>
+	<i>Geo IP Information provided by <a href="http://www.telize.com/">Telize</a></i><br>
+	<i>Geo Browser Information provided by <a href="http://dev.w3.org/geo/api/spec-source.html">W3C Geolocation API</a></i><br>
+	<i>Weather Information provided by <a href="http://openweathermap.org/api">OpenWeatherMap</a></i><br>
 </body>
 </html>
