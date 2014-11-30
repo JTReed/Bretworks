@@ -33,7 +33,7 @@
 			 */
 			function( ipAjaxResp, w3cAjaxResp ) {
 				// fields assigned for ip side here because info taken directly from ajax call
-				var resp = ipAjaxResp[0]; 
+				var resp = ipAjaxResp[0];
 
 				ip = resp.ip;
 				ipLong = resp.longitude;
@@ -42,12 +42,12 @@
 				document.getElementById("ipAddr").innerHTML = ip;
 				document.getElementById("ipLong").innerHTML = ipLong;
 				document.getElementById("ipLat").innerHTML = ipLat;
+
+				console.log( ipLat + ", " + ipLong + "; " + browserLat + ", " + browserLong );
+
 				getWeather( ipLong, ipLat, true );
 
-				// now that all vars are assigned - we can call haversine()
-				haversine();
-
-				findNearestComicShops( ipLong, ipLat, true );
+				findNearestComicShops( true );
 			}
 		)
 	);
@@ -90,7 +90,8 @@
 		document.getElementById("browserLat").innerHTML = browserLat;
 
 		getWeather( browserLong, browserLat, false );
-		findNearestComicShops( browserLong, browserLat, false);
+		haversine();
+		findNearestComicShops( false);
 	}
 
 	// OPENWEATHERMAP API
@@ -123,40 +124,44 @@
 	var ipMap;
 	var browserMap;
 	//var map;
-	function findNearestComicShops( longitude, latitude, ipLoc ) {
+	function findNearestComicShops( ipLoc ) {
 		var service;
 		var loc;
 		var req;
 
 		// FOR IP COORDS
-		loc = new  google.maps.LatLng( ipLat, ipLong );
-		req = {
-			location: loc,
-			radius: '5000',
-			name: 'comics'
-		};
-		
-		ipMap = new google.maps.Map(document.getElementById('ipMap'), {
-			center: loc,
-			zoom: 13
-		});
-		service = new google.maps.places.PlacesService(ipMap);
-  		ipResults = service.nearbySearch(req, ipMapCallback);
+		if( ipLoc ) {
+			loc = new  google.maps.LatLng( ipLat, ipLong );
+			req = {
+				location: loc,
+				radius: '5000',
+				name: 'comics'
+			};
+			
+			ipMap = new google.maps.Map(document.getElementById('ipMap'), {
+				center: loc,
+				zoom: 13
+			});
+			service = new google.maps.places.PlacesService(ipMap);
+	  		ipResults = service.nearbySearch(req, ipMapCallback);
+	  	}
 
   		// FOR BROWSER COORDS
-  		loc = new  google.maps.LatLng( browserLat, browserLong );
-		req = {
-			location: loc,
-			radius: '5000',
-			name: 'comics'
-		};
+  		else{
+	  		loc = new  google.maps.LatLng( browserLat, browserLong );
+			req = {
+				location: loc,
+				radius: '5000',
+				name: 'comics'
+			};
 
-  		browserMap = new google.maps.Map(document.getElementById('browserMap'), {
-			center: loc,
-			zoom: 13
-		});
-		service = new google.maps.places.PlacesService(browserMap);
-		browserResults = service.nearbySearch(req, browserMapCallback);
+	  		browserMap = new google.maps.Map(document.getElementById('browserMap'), {
+				center: loc,
+				zoom: 13
+			});
+			service = new google.maps.places.PlacesService(browserMap);
+			browserResults = service.nearbySearch(req, browserMapCallback);
+		}
 	}
 
 	function ipMapCallback( results, status ) {
@@ -200,6 +205,8 @@
 	// OTHER FUNCTIONS
 	function haversine() {
 		// based on http://www.movable-type.co.uk/scripts/latlong.html
+
+		//console.log( ipLat + ", " + ipLong + "; " + browserLat + ", " + browserLong );
 		var R = 6371; // earth's radius in kilometers
 		var lat1Rads = toRadians( ipLat );
 		var lat2Rads = toRadians( browserLat );
@@ -212,7 +219,7 @@
 		var c = 2 * Math.atan2( Math.sqrt( a ), Math.sqrt( 1 - a ) ); 
 		var d = R * c;
 
-		document.getElementById("diffDist").innerHTML = d;
+		document.getElementById("diffDist").innerHTML = "Difference between locations: " + d + "km";
 	}
 
 	function toRadians( angle ) {
@@ -221,7 +228,7 @@
 </script>
 </head>
 <body style="height: 100%; width: 100%">
-	Difference between locations: <span id = "diffDist"></span>km<br>
+	<span id = "diffDist"></span>
 	<hr>
 	<div id = "ipLoc" style="height: 100%; width: 50%">
 	Location determined by IP (<span id = "ipAddr"></span>):<br>
