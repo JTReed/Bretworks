@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+<style>
+  html, body, #map-canvas {
+    height: 100%;
+    margin: 0px;
+    padding: 0px
+  }
+</style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
 <script>
 	// TODO: One more piece of location info
 
@@ -10,6 +19,8 @@
 	var ipLat;
 	var browserLong;
 	var browserLat;
+	var API_KEY = "AIzaSyDOER-J7d9gtTW3xGLSedkERWDqP62d8iU";
+	var secondSearch = false;
 
 	/* Wait for all fields to load and then wait for both 
 	 *
@@ -37,10 +48,15 @@
 
 				// now that all vars are assigned - we can call haversine()
 				haversine();
+
+				findNearestComicShops( ipLong, ipLat, true );
+				secondSearch = true;
+				findNearestComicShops( browserLong, browserLat, false);
 			}
 		)
 	);
 
+	// TELIZE GEOLOCATION API
 	function getTelizeLocation() {
 		// return $.ajax response for $.when
 		/* Telize fields of interest (JSON)
@@ -56,7 +72,13 @@
 		});
 	}
 
+	// W3C GEOLOCATION API
 	function getW3CLocation() {
+		/* Geolocation with this API doesn't use an AJAX request so we will
+		 * let the $.when func know this is done after it's assigned 
+		 * weather values
+		 */
+
 		/* W3C Fields of interest:
 		 * - position.coords.longitude
 		 * - position.coords.latitude
@@ -74,6 +96,7 @@
 		getWeather( browserLong, browserLat, false );
 	}
 
+	// OPENWEATHERMAP API
 	function getWeather(longitude, latitude, ipLoc) {
 		// return $.ajax response for $.when
 		/* openweathermap fields of interest
@@ -85,7 +108,7 @@
 			type: "GET",
 			url: "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=imperial",
 			dataType: "json"
-		}).done( 
+		}).done( // do this stuff when the ajax request is done
 			function( ajaxResp ) {
 				if( ipLoc ) {
 					document.getElementById("ipTemp").innerHTML = ajaxResp.main.temp;
@@ -99,6 +122,67 @@
 		);
 	}
 
+	// GOOGLE PLACES API
+	var ipMap;
+	var browserMap;
+	var currentMap;
+	function findNearestComicShops( longitude, latitude, ipLoc ) {
+		var service;
+		var loc = new  google.maps.LatLng( latitude, longitude );
+		var req = {
+			location: loc,
+			radius: '10000',
+			name: 'comics'
+		};
+		var map;
+		if( ipLoc ) {
+			ipMap = new google.maps.Map(document.getElementById('ipMap'), {
+				center: loc,
+				zoom: 14
+			});
+			service = new google.maps.places.PlacesService(ipMap);
+		}
+		else {
+			browserMap = new google.maps.Map(document.getElementById('browserMap'), {
+				center: loc,
+				zoom: 14
+			});
+			service = new google.maps.places.PlacesService(browserMap);
+		}
+  		service.nearbySearch(req, mapCallback);
+	}
+
+	function mapCallback( results, status ) {
+		
+		if (status == google.maps.places.PlacesServiceStatus.OK) {
+		    for (var i = 0; i < results.length; i++) {
+		      var place = results[i];
+		      createMarker(results[i]);
+    		}
+  		}
+	}
+
+	function createMarker(place) {
+	  var map = ipMap;
+	  if( secondSearch ) {
+	  	map = browserMap;
+	  }
+
+	  var placeLoc = place.geometry.location;
+	  var marker = new google.maps.Marker({
+	    map: map,
+	    position: place.geometry.location
+	  });
+
+	  google.maps.event.addListener(marker, 'click', function() {
+	    infowindow.setContent(place.name);
+	    infowindow.open(map, this);
+	  });
+	}
+
+	google.maps.event.addDomListener( window, 'load', findNearestComicShops );
+
+	// OTHER FUNCTIONS
 	function haversine() {
 		// based on http://www.movable-type.co.uk/scripts/latlong.html
 		var R = 6371; // earth's radius in kilometers
@@ -121,10 +205,10 @@
 	}
 </script>
 </head>
-<body>
+<body style="height: 100%; width: 100%">
 	Difference between locations: <span id = "diffDist"></span>km<br>
 	<hr>
-	<div id = "ipLoc">
+	<div id = "ipLoc" style="height: 100%; width: 50%">
 	Location determined by IP (<span id = "ipAddr"></span>):<br>
 	Longitude: <span id = "ipLong"></span><br>
 	Latitude: <span id = "ipLat"></span><br>
@@ -133,10 +217,11 @@
 	Temperature: <span id = "ipTemp"></span>F<br>
 	Wind Speed: <span id = "ipWind"></span>mph<br>
 	<br>
-	TODO: Provide a second piece of location specific data<br>
+	Nearby Comic Book Shops: <span id = "ipComicCount"></span><br>
+	<div id = "ipMap" style="height: 70%; width: 100%"></div><br>
 	</div>
 	<hr>
-	<div id = "browserLoc">
+	<div id = "browserLoc" style="height: 100%; width: 50%">
 	Location reported by browser:<br>
 	Longitude: <span id = "browserLong"></span><br>
 	Latitude: <span id = "browserLat"></span><br>
@@ -145,11 +230,13 @@
 	Temperature: <span id = "browserTemp"></span>F<br>
 	Wind Speed: <span id = "browserWind"></span>mph<br>
 	<br>
-	TODO: Provide a second piece of location specific data<br>
+	Nearby Comic Book Shops: <span id = "browserComicCount"></span><br>
+	<div id = "browserMap" style="height: 70%; width: 100%"></div><br>
 	</div>
 	<hr>
 	<i>Geo IP Information provided by <a href="http://www.telize.com/">Telize</a></i><br>
 	<i>Geo Browser Information provided by <a href="http://dev.w3.org/geo/api/spec-source.html">W3C Geolocation API</a></i><br>
 	<i>Weather Information provided by <a href="http://openweathermap.org/api">OpenWeatherMap</a></i><br>
+	<i>Places Information provided by <a href="https://developers.google.com/maps/documentation/javascript/places">Google Maps Javascript API</a></i><br>
 </body>
 </html>
