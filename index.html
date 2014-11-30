@@ -20,6 +20,12 @@
 	var browserLong;
 	var browserLat;
 
+	// start times
+	var telizeStart;
+	var w3cStart;
+	var weatherStart;
+	var mapsStart;
+
 	/* Wait for all fields to load and then wait for both 
 	 *
 	 */
@@ -58,11 +64,15 @@
 		 * - longitude
 		 * - latitude
 		 */
+		telizeStart = Date.now();
 		return $.ajax(
 		{
     		type: "GET",
     		url: "http://www.telize.com/geoip",
     		dataType: "json"
+		}).done( function() {
+			//console.log( "Telize done in " + (Date.now() - telizeStart ) + " ms" );
+			document.getElementById("ipLocTime").innerHTML = (Date.now() - telizeStart);
 		});
 	}
 
@@ -77,10 +87,14 @@
 		 * - position.coords.longitude
 		 * - position.coords.latitude
 		 */
+		w3cStart = Date.now();
 		navigator.geolocation.getCurrentPosition( W3CSetValues );
 	}
 
 	function W3CSetValues( position ) {
+		//console.log( "w3c done in " + (Date.now() - w3cStart ) + " ms" );
+		document.getElementById("browserLocTime").innerHTML = (Date.now() - w3cStart);
+
 		browserLong = position.coords.longitude;
 		browserLat = position.coords.latitude;
 
@@ -99,6 +113,7 @@
 		 * - main.temp
 		 * - wind.speed
 		 */ 
+		weatherStart = Date.now();
 		return $.ajax(
 		{
 			type: "GET",
@@ -106,11 +121,14 @@
 			dataType: "json"
 		}).done( // do this stuff when the ajax request is done
 			function( ajaxResp ) {
+				//console.log( "weather done in " + (Date.now() - weatherStart ) + " ms" );
 				if( ipLoc ) {
+					document.getElementById("ipWeatherTime").innerHTML = (Date.now() - weatherStart);
 					document.getElementById("ipTemp").innerHTML = ajaxResp.main.temp;
 					document.getElementById("ipWind").innerHTML = ajaxResp.wind.speed;
 				}
 				else {
+					document.getElementById("browserWeatherTime").innerHTML = (Date.now() - weatherStart);
 					document.getElementById("browserTemp").innerHTML = ajaxResp.main.temp;
 					document.getElementById("browserWind").innerHTML = ajaxResp.wind.speed;
 				}
@@ -127,6 +145,7 @@
 		var loc;
 		var req;
 
+		mapsStart = Date.now();
 		// FOR IP COORDS
 		if( ipLoc ) {
 			loc = new  google.maps.LatLng( ipLat, ipLong );
@@ -163,6 +182,8 @@
 	}
 
 	function ipMapCallback( results, status ) {
+		//console.log( "maps done in " + (Date.now() - mapsStart ) + " ms" );
+		document.getElementById("ipMapTime").innerHTML = (Date.now() - mapsStart);
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
@@ -172,6 +193,7 @@
 	}
 
 	function browserMapCallback( results, status ) {
+		document.getElementById("browserMapTime").innerHTML = (Date.now() - mapsStart);
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
@@ -236,26 +258,32 @@
 	Location determined by IP (<span id = "ipAddr"></span>):<br>
 	Longitude: <span id = "ipLong"></span><br>
 	Latitude: <span id = "ipLat"></span><br>
+	<i>fetched in <span id = "ipLocTime"></span> ms</i><br>
 	<br>
 	Nearby Weather:<br>
 	Temperature: <span id = "ipTemp"></span>F<br>
 	Wind Speed: <span id = "ipWind"></span>mph<br>
+	<i>fetched in <span id = "ipWeatherTime"></span> ms</i><br>
 	<br>
 	Nearby Comic Book Shops: <span id = "ipComicCount"></span><br>
 	<div id = "ipMap" style="height: 70%; width: 100%"></div><br>
+	<i>fetched in <span id = "ipMapTime"></span> ms</i><br>
 	</div>
 	<hr>
 	<div id = "browserLoc" style="height: 100%; width: 50%">
 	Location reported by browser:<br>
 	Longitude: <span id = "browserLong"></span><br>
 	Latitude: <span id = "browserLat"></span><br>
+	<i>fetched in <span id = "browserLocTime"></span> ms</i><br>
 	<br>
 	Nearby Weather:<br>
 	Temperature: <span id = "browserTemp"></span>F<br>
 	Wind Speed: <span id = "browserWind"></span>mph<br>
+	<i>fetched in <span id = "browserWeatherTime"></span> ms</i><br>
 	<br>
 	Nearby Comic Book Shops: <span id = "browserComicCount"></span><br>
 	<div id = "browserMap" style="height: 70%; width: 100%"></div><br>
+	<i>fetched in <span id = "browserMapTime"></span> ms</i><br>
 	</div>
 	<hr>
 	<i>Geo IP Information provided by <a href="http://www.telize.com/">Telize</a></i><br>
