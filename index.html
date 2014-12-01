@@ -40,11 +40,18 @@
 			function( ipAjaxResp, w3cAjaxResp ) {
 				// fields assigned for ip side here because info taken directly from ajax call
 				var resp = ipAjaxResp[0];
+				var fetchTime = (performance.timing.responseEnd) - (performance.timing.fetchStart);
+				var renderTime = (performance.timing.domComplete) - (performance.timing.domLoading);
+		                var fetchAndRenderTime = (performance.timing.domComplete) - (performance.timing.fetchStart);
+
 
 				ip = resp.ip;
 				ipLong = resp.longitude;
 				ipLat = resp.latitude;
-
+				
+				document.getElementById("fetchTime").innerHTML = fetchTime;
+        			document.getElementById("renderTime").innerHTML = renderTime;
+        			document.getElementById("fetchAndRenderTime").innerHTML = fetchAndRenderTime;
 				document.getElementById("ipAddr").innerHTML = ip;
 				document.getElementById("ipLong").innerHTML = ipLong;
 				document.getElementById("ipLat").innerHTML = ipLat;
@@ -255,6 +262,12 @@
 	<span id = "diffDist"></span>
 	<hr>
 	<div id = "ipLoc" style="height: 100%; width: 50%">
+	<br>
+	<i>Time to fetch the page: <span id = "fetchTime"></span> ms</i><br>
+	<i>Time to render the page: <span id = "renderTime"></span> ms</i><br>
+	<i>Time to fetch & render the page: <span id = "fetchAndRenderTime"></span> ms</i><br>
+	<br>
+	<br>
 	Location determined by IP (<span id = "ipAddr"></span>):<br>
 	Longitude: <span id = "ipLong"></span><br>
 	Latitude: <span id = "ipLat"></span><br>
