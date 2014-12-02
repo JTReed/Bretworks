@@ -164,7 +164,7 @@
 			
 			ipMap = new google.maps.Map(document.getElementById('ipMap'), {
 				center: loc,
-				zoom: 13
+				zoom: 12
 			});
 			service = new google.maps.places.PlacesService(ipMap);
 	  		ipResults = service.nearbySearch(req, ipMapCallback);
@@ -181,7 +181,7 @@
 
 	  		browserMap = new google.maps.Map(document.getElementById('browserMap'), {
 				center: loc,
-				zoom: 13
+				zoom: 12
 			});
 			service = new google.maps.places.PlacesService(browserMap);
 			browserResults = service.nearbySearch(req, browserMapCallback);
@@ -189,7 +189,7 @@
 	}
 
 	function ipMapCallback( results, status ) {
-		//console.log( "maps done in " + (performance.now() - mapsStart ) + " ms" );
+		document.getElementById("ipComicCount").innerHTML = "Found "+results.length+" within 5km";
 		document.getElementById("ipMapTime").innerHTML = (performance.now() - mapsStart);
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
@@ -197,9 +197,11 @@
 		      createMarker(results[i], ipMap);
     		}
   		}
+  		createHomeMarker( ipLat, ipLong, ipMap);
 	}
 
 	function browserMapCallback( results, status ) {
+		document.getElementById("browserComicCount").innerHTML = "Found "+results.length+" within 5km";
 		document.getElementById("browserMapTime").innerHTML = (performance.now() - mapsStart);
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
@@ -207,6 +209,7 @@
 		      createMarker(results[i], browserMap);
     		}
   		}
+  		createHomeMarker( browserLat, browserLong, browserMap );
 	}
 
 	function createMarker(place, map) {
@@ -223,6 +226,24 @@
 
 		google.maps.event.addListener(marker, 'click', function() {
 			infowindow.setContent(place.name);
+			infowindow.open(map, this);
+		});
+	}
+	
+	function createHomeMarker( lat, lon, map) {
+		var infowindow = new google.maps.InfoWindow(
+		{ 
+			size: new google.maps.Size(300,150)
+		});
+		
+		var loc = new  google.maps.LatLng( lat, lon );
+		var marker = new google.maps.Marker({
+			map: map,
+			position: loc
+		});
+		
+		google.maps.event.addListener(marker, 'click', function() {
+			infowindow.setContent("Current Location");
 			infowindow.open(map, this);
 		});
 	}
@@ -261,7 +282,7 @@
 <body style="height: 100%; width: 100%">
 	<span id = "diffDist"></span>
 	<hr>
-	<div id = "ipLoc" style="height: 100%; width: 50%">
+	<div id = "ipLoc">
 	<br>
 	<i>Time to fetch the page: <span id = "fetchTime"></span> ms</i><br>
 	<i>Time to render the page: <span id = "renderTime"></span> ms</i><br>
@@ -279,11 +300,11 @@
 	<i>fetched in <span id = "ipWeatherTime"></span> ms</i><br>
 	<br>
 	Nearby Comic Book Shops: <span id = "ipComicCount"></span><br>
-	<div id = "ipMap" style="height: 70%; width: 100%"></div><br>
+	<div id = "ipMap" style="height: 400px; width: 400px"></div><br>
 	<i>fetched in <span id = "ipMapTime"></span> ms</i><br>
 	</div>
 	<hr>
-	<div id = "browserLoc" style="height: 100%; width: 50%">
+	<div id = "browserLoc">
 	Location reported by browser:<br>
 	Longitude: <span id = "browserLong"></span><br>
 	Latitude: <span id = "browserLat"></span><br>
@@ -295,7 +316,7 @@
 	<i>fetched in <span id = "browserWeatherTime"></span> ms</i><br>
 	<br>
 	Nearby Comic Book Shops: <span id = "browserComicCount"></span><br>
-	<div id = "browserMap" style="height: 70%; width: 100%"></div><br>
+	<div id = "browserMap" style="height: 400px; width: 400px"></div><br>
 	<i>fetched in <span id = "browserMapTime"></span> ms</i><br>
 	</div>
 	<hr>
