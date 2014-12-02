@@ -71,15 +71,15 @@
 		 * - longitude
 		 * - latitude
 		 */
-		telizeStart = Date.now();
+		telizeStart = performance.now();
 		return $.ajax(
 		{
     		type: "GET",
     		url: "http://www.telize.com/geoip",
     		dataType: "json"
 		}).done( function() {
-			//console.log( "Telize done in " + (Date.now() - telizeStart ) + " ms" );
-			document.getElementById("ipLocTime").innerHTML = (Date.now() - telizeStart);
+			//console.log( "Telize done in " + (performance.now() - telizeStart ) + " ms" );
+			document.getElementById("ipLocTime").innerHTML = (performance.now() - telizeStart);
 		});
 	}
 
@@ -94,13 +94,13 @@
 		 * - position.coords.longitude
 		 * - position.coords.latitude
 		 */
-		w3cStart = Date.now();
+		w3cStart = performance.now();
 		navigator.geolocation.getCurrentPosition( W3CSetValues );
 	}
 
 	function W3CSetValues( position ) {
-		//console.log( "w3c done in " + (Date.now() - w3cStart ) + " ms" );
-		document.getElementById("browserLocTime").innerHTML = (Date.now() - w3cStart);
+		//console.log( "w3c done in " + (performance.now() - w3cStart ) + " ms" );
+		document.getElementById("browserLocTime").innerHTML = (performance.now() - w3cStart);
 
 		browserLong = position.coords.longitude;
 		browserLat = position.coords.latitude;
@@ -120,7 +120,7 @@
 		 * - main.temp
 		 * - wind.speed
 		 */ 
-		weatherStart = Date.now();
+		weatherStart = performance.now();
 		return $.ajax(
 		{
 			type: "GET",
@@ -128,14 +128,14 @@
 			dataType: "json"
 		}).done( // do this stuff when the ajax request is done
 			function( ajaxResp ) {
-				//console.log( "weather done in " + (Date.now() - weatherStart ) + " ms" );
+				//console.log( "weather done in " + (performance.now() - weatherStart ) + " ms" );
 				if( ipLoc ) {
-					document.getElementById("ipWeatherTime").innerHTML = (Date.now() - weatherStart);
+					document.getElementById("ipWeatherTime").innerHTML = (performance.now() - weatherStart);
 					document.getElementById("ipTemp").innerHTML = ajaxResp.main.temp;
 					document.getElementById("ipWind").innerHTML = ajaxResp.wind.speed;
 				}
 				else {
-					document.getElementById("browserWeatherTime").innerHTML = (Date.now() - weatherStart);
+					document.getElementById("browserWeatherTime").innerHTML = (performance.now() - weatherStart);
 					document.getElementById("browserTemp").innerHTML = ajaxResp.main.temp;
 					document.getElementById("browserWind").innerHTML = ajaxResp.wind.speed;
 				}
@@ -152,7 +152,7 @@
 		var loc;
 		var req;
 
-		mapsStart = Date.now();
+		mapsStart = performance.now();
 		// FOR IP COORDS
 		if( ipLoc ) {
 			loc = new  google.maps.LatLng( ipLat, ipLong );
@@ -189,8 +189,8 @@
 	}
 
 	function ipMapCallback( results, status ) {
-		//console.log( "maps done in " + (Date.now() - mapsStart ) + " ms" );
-		document.getElementById("ipMapTime").innerHTML = (Date.now() - mapsStart);
+		//console.log( "maps done in " + (performance.now() - mapsStart ) + " ms" );
+		document.getElementById("ipMapTime").innerHTML = (performance.now() - mapsStart);
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
@@ -200,7 +200,7 @@
 	}
 
 	function browserMapCallback( results, status ) {
-		document.getElementById("browserMapTime").innerHTML = (Date.now() - mapsStart);
+		document.getElementById("browserMapTime").innerHTML = (performance.now() - mapsStart);
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
