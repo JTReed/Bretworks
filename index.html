@@ -49,9 +49,9 @@
 				ipLong = resp.longitude;
 				ipLat = resp.latitude;
 				
-				document.getElementById("fetchTime").innerHTML = fetchTime;
-        			document.getElementById("renderTime").innerHTML = renderTime;
-        			document.getElementById("fetchAndRenderTime").innerHTML = fetchAndRenderTime;
+				document.getElementById("fetchTime").innerHTML = Math.floor( fetchTime );
+        			document.getElementById("renderTime").innerHTML = Math.floor( renderTime );
+        			document.getElementById("fetchAndRenderTime").innerHTML = Math.floor( fetchAndRenderTime );
 				document.getElementById("ipAddr").innerHTML = ip;
 				document.getElementById("ipLong").innerHTML = ipLong;
 				document.getElementById("ipLat").innerHTML = ipLat;
@@ -79,7 +79,7 @@
     		dataType: "json"
 		}).done( function() {
 			//console.log( "Telize done in " + (performance.now() - telizeStart ) + " ms" );
-			document.getElementById("ipLocTime").innerHTML = (performance.now() - telizeStart);
+			document.getElementById("ipLocTime").innerHTML = Math.floor( (performance.now() - telizeStart) );
 		});
 	}
 
@@ -100,7 +100,7 @@
 
 	function W3CSetValues( position ) {
 		//console.log( "w3c done in " + (performance.now() - w3cStart ) + " ms" );
-		document.getElementById("browserLocTime").innerHTML = (performance.now() - w3cStart);
+		document.getElementById("browserLocTime").innerHTML = Math.floor( (performance.now() - w3cStart) );
 
 		browserLong = position.coords.longitude;
 		browserLat = position.coords.latitude;
@@ -130,12 +130,12 @@
 			function( ajaxResp ) {
 				//console.log( "weather done in " + (performance.now() - weatherStart ) + " ms" );
 				if( ipLoc ) {
-					document.getElementById("ipWeatherTime").innerHTML = (performance.now() - weatherStart);
+					document.getElementById("ipWeatherTime").innerHTML = Math.floor( (performance.now() - weatherStart ) );
 					document.getElementById("ipTemp").innerHTML = ajaxResp.main.temp;
 					document.getElementById("ipWind").innerHTML = ajaxResp.wind.speed;
 				}
 				else {
-					document.getElementById("browserWeatherTime").innerHTML = (performance.now() - weatherStart);
+					document.getElementById("browserWeatherTime").innerHTML = Math.floor( (performance.now() - weatherStart) );
 					document.getElementById("browserTemp").innerHTML = ajaxResp.main.temp;
 					document.getElementById("browserWind").innerHTML = ajaxResp.wind.speed;
 				}
@@ -190,7 +190,7 @@
 
 	function ipMapCallback( results, status ) {
 		document.getElementById("ipComicCount").innerHTML = "Found "+results.length+" within 5km";
-		document.getElementById("ipMapTime").innerHTML = (performance.now() - mapsStart);
+		document.getElementById("ipMapTime").innerHTML = Math.floor( (performance.now() - mapsStart) );
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
@@ -202,7 +202,7 @@
 
 	function browserMapCallback( results, status ) {
 		document.getElementById("browserComicCount").innerHTML = "Found "+results.length+" within 5km";
-		document.getElementById("browserMapTime").innerHTML = (performance.now() - mapsStart);
+		document.getElementById("browserMapTime").innerHTML = Math.floor( (performance.now() - mapsStart) );
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
@@ -239,7 +239,8 @@
 		var loc = new  google.maps.LatLng( lat, lon );
 		var marker = new google.maps.Marker({
 			map: map,
-			position: loc
+			position: loc,
+			icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
 		});
 		
 		google.maps.event.addListener(marker, 'click', function() {
