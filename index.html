@@ -12,8 +12,6 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
 <script>
-	// TODO: One more piece of location info
-
 	var ip;
 	var ipLong;
 	var ipLat;
@@ -25,6 +23,7 @@
 	var w3cStart;
 	var weatherStart;
 	var mapsStart;
+	var addressStart;
 
 	/* Wait for all fields to load and then wait for both 
 	 *
@@ -152,7 +151,7 @@
 		var loc;
 		var req;
 
-		mapsStart = performance.now();
+		
 		// FOR IP COORDS
 		if( ipLoc ) {
 			loc = new  google.maps.LatLng( ipLat, ipLong );
@@ -167,6 +166,7 @@
 				zoom: 12
 			});
 			service = new google.maps.places.PlacesService(ipMap);
+			mapsStart = performance.now();
 	  		ipResults = service.nearbySearch(req, ipMapCallback);
 	  	}
 
@@ -184,6 +184,7 @@
 				zoom: 12
 			});
 			service = new google.maps.places.PlacesService(browserMap);
+			mapsStart = performance.now();
 			browserResults = service.nearbySearch(req, browserMapCallback);
 		}
 	}
@@ -194,7 +195,7 @@
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
-		      createMarker(results[i], ipMap);
+		      createMarker(results[i], ipMap, true);
     		}
   		}
   		createHomeMarker( ipLat, ipLong, ipMap);
@@ -206,23 +207,45 @@
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 		    for (var i = 0; i < results.length; i++) {
 		      var place = results[i];
-		      createMarker(results[i], browserMap);
+		      createMarker(results[i], browserMap, false);
     		}
   		}
   		createHomeMarker( browserLat, browserLong, browserMap );
 	}
 
-	function createMarker(place, map) {
+	function createMarker(place, map, ipLoc) {
 		var infowindow = new google.maps.InfoWindow(
 		{ 
 			size: new google.maps.Size(300,150)
 		});
 
+		// Oh no more AJAX...
+		addressStart = performance.now();
+		var placeObj = $.ajax({
+			type: "GET",
+			url: "http://maps.googleapis.com/maps/api/geocode/json?"+
+				"latlng="+place.geometry.location.k+","+place.geometry.location.B+"&sensor=false",
+			dataType: "json"
+		}).done( function() {
+			console.log( placeObj.responseJSON );
+			var elementName;
+			if( ipLoc ) {
+				elementName = "ipComicCount";
+			}
+			else {
+				elementName = "browserComicCount"
+			}
+
+			document.getElementById( elementName ).innerHTML += "<br />"+place.name+" - "+placeObj.responseJSON.results[0].formatted_address+" <i>(fetched in "+Math.floor(performance.now()-addressStart)+"ms)</i>";
+
+		});
+
 		var placeLoc = place.geometry.location;
 		var marker = new google.maps.Marker({
 			map: map,
-			position: place.geometry.location
-		});
+			position: place.geometry.location,
+			icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+		}); 
 
 		google.maps.event.addListener(marker, 'click', function() {
 			infowindow.setContent(place.name);
@@ -248,6 +271,8 @@
 			infowindow.open(map, this);
 		});
 	}
+
+
 
 	google.maps.event.addDomListener( window, 'load', findNearestComicShops );
 
