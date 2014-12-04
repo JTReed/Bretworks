@@ -1,25 +1,71 @@
 Page Load Times Data--
 1. API Response Time (to when the callback funtion is invoked):
-	a. Telize Geolocation API:	437ms 
-	b. W3C Geolocation API:		236ms
-	c. OpenWeatherMap API (IP):	268ms
-	d. OpenWeatherMap API (W3C):	270ms
-	e. Google Places API (IP):	437ms
-	f. Google Places API (W3C):	358ms
+	a. IP:
+		Telize Geolocation API:
+			1. On Campus: fetched in 727 ms
+			2. Off Campus: 1273 ms
+			3. On Campus (Mobile, off-campus, T-Mobile): 705 ms
+			4. Outside of Madison (Corvallis, OR): 662 ms
+		OpenWeatherMap API (IP):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR): 
+		Google Places Map API (IP):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR):
+		Google Places Comic Book Store #1 API (IP):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR): 
+		Google Places Comic Book Store #2 API (IP):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR): 
+	b. W3C:
+		Geolocation API:	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR): 
+		OpenWeatherMap API (W3C):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR): 
+		Google Places Map API (W3C):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR):
+		Google Places Comic Book Store #1 API (W3C):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR): 
+		Google Places Comic Book Store #2 API (W3C):	
+			1. On Campus: 
+			2. Off Campus: 
+			3. On Campus (Mobile, off-campus, T-Mobile): 
+			4. Outside of Madison (Corvallis, OR): 
 2. Page Fetch Time (fetchStart to ResponseEnd): 
 	a. On Campus: 
 	b. Off Campus: 
-	c. On Campus (Mobile - US Cellular):
+	c. On Campus (Mobile - US Cellular): 
 	d. Outside of Madison (Corvallis, OR): 
 3. Page Render Time (domLoading to domComplete): 
 	a. On Campus: 
 	b. Off Campus: 
-	c. On Campus (Mobile - US Cellular):
+	c. On Campus (Mobile - US Cellular): 
 	d. Outside of Madison (Corvallis, OR): 
 4. Fetch & Render Page (fetchStart to domComplete): 
 	a. On Campus: 
 	b. Off Campus: 
-	c. On Campus (Mobile - US Cellular):
+	c. On Campus (Mobile - US Cellular): 
 	d. Outside of Madison (Corvallis, OR): 
 
 Questions--
