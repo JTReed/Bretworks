@@ -1,8 +1,8 @@
 Distance Data--
-1. On Campus: 3.5270781495257975km
-2. Off Campus: 
-3. On Campus (Mobile - US Cellular): 95.76653261876106km
-4. Outside of Madison (Corvallis, OR): 6.647037931075907km
+1. On Campus: 0.5706886604880204km
+2. Off Campus: 10.977824714940631km
+3. On Campus (Mobile, off campus - US Cellular): 853.400215247478km
+4. Outside of Madison (Corvallis, OR): 6.643194882200189km
 
 Questions--
 1. Which location/connectivity combination had the lowest error (i.e., the shortest distance between the IP-based geolocation and the W3C-based geolocation)? What is one possible networking explanation for this low error?
