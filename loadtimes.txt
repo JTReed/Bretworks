@@ -53,20 +53,20 @@ Page Load Times Data--
 			3. On Campus (Mobile, off-campus, T-Mobile): 134ms
 			4. Outside of Madison (Corvallis, OR): One (1) found - See Location #1
 2. Page Fetch Time (fetchStart to ResponseEnd): 
-	a. On Campus: 
-	b. Off Campus: 
-	c. On Campus (Mobile - US Cellular): 
-	d. Outside of Madison (Corvallis, OR): 
+	a. On Campus: 173 ms
+	b. Off Campus: 484 ms
+	c. Mobile, off-campus, T-Mobile: 9 ms
+	d. Outside of Madison (Corvallis, OR): 149 ms
 3. Page Render Time (domLoading to domComplete): 
-	a. On Campus: 
-	b. Off Campus: 
-	c. On Campus (Mobile - US Cellular): 
-	d. Outside of Madison (Corvallis, OR): 
+	a. On Campus: 1098 ms
+	b. Off Campus: 789 ms
+	c. Mobile, off-campus, T-Mobile: 689 ms
+	d. Outside of Madison (Corvallis, OR): 562 ms
 4. Fetch & Render Page (fetchStart to domComplete): 
-	a. On Campus: 
-	b. Off Campus: 
-	c. On Campus (Mobile - US Cellular): 
-	d. Outside of Madison (Corvallis, OR): 
+	a. On Campus: 1296 ms
+	b. Off Campus: 1273 ms
+	c. Mobile, off-campus, T-Mobile: 705 ms
+	d. Outside of Madison (Corvallis, OR): 662 ms
 
 Questions--
 1. For each location/connectivity combination, which REST API call takes the longest complete? Is the answer the same for all location/connectivity combinations? Does this mean the delay for this REST API call is primarily determined by the browser, the last-mile connection, or the remote service?
