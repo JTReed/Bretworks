@@ -4,68 +4,58 @@ Page Load Times Data--
 		Telize Geolocation API:
 			1. On Campus: fetched in 727 ms
 			2. Off Campus: 590 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 632 ms
+			3. Mobile (T-Mobile): 632 ms
 			4. Outside of Madison (Corvallis, OR): 460 ms
 		OpenWeatherMap API (IP): 	
 			1. On Campus: 135 ms
 			2. Off Campus: 489 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 307 ms
+			3. Mobile (T-Mobile): 307 ms
 			4. Outside of Madison (Corvallis, OR): 742 ms
 		Google Places Map API (IP): 	
 			1. On Campus: 993 ms
 			2. Off Campus: 947 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 868 ms
+			3. Mobile (T-Mobile): 868 ms
 			4. Outside of Madison (Corvallis, OR): 317 ms
-		Google Places Comic Book Store #1 API (IP):	
-			1. On Campus: 43ms
-			2. Off Campus: None Found - stated we were in Middleton
-			3. On Campus (Mobile, off-campus, T-Mobile): None Found - stated we were in Kansas
-			4. Outside of Madison (Corvallis, OR): None Found Nearby
-		Google Places Comic Book Store #2 API (IP):	
-			1. On Campus: 46ms
-			2. Off Campus: None Found - stated we were in Middleton
-			3. On Campus (Mobile, off-campus, T-Mobile): None Found - stated we were in Kansas
-			4. Outside of Madison (Corvallis, OR): None Found Nearby
+		Google Places Geolocator (IP):	
+			1. On Campus: 43,46ms
+			2. Off Campus: No requests
+			3. Mobile (T-Mobile): No requests
+			4. Outside of Madison (Corvallis, OR): No requests
 	b. W3C:
 		Geolocation API:	
 			1. On Campus: 787 ms
 			2. Off Campus: 535 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 1414 ms
+			3. Mobile (T-Mobile): 1414 ms
 			4. Outside of Madison (Corvallis, OR): 106504 ms
 		OpenWeatherMap API (W3C):	
 			1. On Campus: 375 ms
 			2. Off Campus: 1539 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 353 ms
+			3. Mobile (T-Mobile): 353 ms
 			4. Outside of Madison (Corvallis, OR): 546 ms
 		Google Places Map API (W3C):	
 			1. On Campus: 1010 ms
 			2. Off Campus: 951 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 872 ms
+			3. Mobile (T-Mobile): 872 ms
 			4. Outside of Madison (Corvallis, OR): 215 ms
-		Google Places Comic Book Store #1 API (W3C):	
-			1. On Campus: 55ms
-			2. Off Campus: 93 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 130ms
-			4. Outside of Madison (Corvallis, OR): 335ms
-		Google Places Comic Book Store #2 API (W3C):	
-			1. On Campus: 62ms
-			2. Off Campus: 97 ms
-			3. On Campus (Mobile, off-campus, T-Mobile): 134ms
-			4. Outside of Madison (Corvallis, OR): One (1) found - See Location #1
+		Google Places Geolocator (W3C):	
+			1. On Campus: 55,62ms
+			2. Off Campus: 93,97 ms
+			3. Mobile: 130,134ms
+			4. Corvallis, OR: 335ms
 2. Page Fetch Time (fetchStart to ResponseEnd): 
 	a. On Campus: 173 ms
 	b. Off Campus: 484 ms
-	c. Mobile, off-campus, T-Mobile: 9 ms
+	c. Mobile, T-Mobile: 9 ms
 	d. Outside of Madison (Corvallis, OR): 149 ms
 3. Page Render Time (domLoading to domComplete): 
 	a. On Campus: 1098 ms
 	b. Off Campus: 789 ms
-	c. Mobile, off-campus, T-Mobile: 689 ms
+	c. Mobile, T-Mobile: 689 ms
 	d. Outside of Madison (Corvallis, OR): 562 ms
 4. Fetch & Render Page (fetchStart to domComplete): 
 	a. On Campus: 1296 ms
 	b. Off Campus: 1273 ms
-	c. Mobile, off-campus, T-Mobile: 705 ms
+	c. Mobile, T-Mobile: 705 ms
 	d. Outside of Madison (Corvallis, OR): 662 ms
 
 Questions--
