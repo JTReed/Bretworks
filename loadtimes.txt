@@ -28,30 +28,30 @@ Page Load Times Data--
 			4. Outside of Madison (Corvallis, OR): None Found Nearby
 	b. W3C:
 		Geolocation API:	
-			1. On Campus: 
-			2. Off Campus: 
-			3. On Campus (Mobile, off-campus, T-Mobile): 
-			4. Outside of Madison (Corvallis, OR): 
+			1. On Campus: 787 ms
+			2. Off Campus: 535 ms
+			3. On Campus (Mobile, off-campus, T-Mobile): 1414 ms
+			4. Outside of Madison (Corvallis, OR): 106504 ms
 		OpenWeatherMap API (W3C):	
-			1. On Campus: 
-			2. Off Campus: 
-			3. On Campus (Mobile, off-campus, T-Mobile): 
-			4. Outside of Madison (Corvallis, OR): 
+			1. On Campus: 375 ms
+			2. Off Campus: 1539 ms
+			3. On Campus (Mobile, off-campus, T-Mobile): 353 ms
+			4. Outside of Madison (Corvallis, OR): 546 ms
 		Google Places Map API (W3C):	
-			1. On Campus: 
-			2. Off Campus: 
-			3. On Campus (Mobile, off-campus, T-Mobile): 
-			4. Outside of Madison (Corvallis, OR):
+			1. On Campus: 1010 ms
+			2. Off Campus: 951 ms
+			3. On Campus (Mobile, off-campus, T-Mobile): 872 ms
+			4. Outside of Madison (Corvallis, OR): 215 ms
 		Google Places Comic Book Store #1 API (W3C):	
-			1. On Campus: 
-			2. Off Campus: 
-			3. On Campus (Mobile, off-campus, T-Mobile): 
-			4. Outside of Madison (Corvallis, OR): 
+			1. On Campus: 55ms
+			2. Off Campus: 93 ms
+			3. On Campus (Mobile, off-campus, T-Mobile): 130ms
+			4. Outside of Madison (Corvallis, OR): 335ms
 		Google Places Comic Book Store #2 API (W3C):	
-			1. On Campus: 
-			2. Off Campus: 
-			3. On Campus (Mobile, off-campus, T-Mobile): 
-			4. Outside of Madison (Corvallis, OR): 
+			1. On Campus: 62ms
+			2. Off Campus: 97 ms
+			3. On Campus (Mobile, off-campus, T-Mobile): 134ms
+			4. Outside of Madison (Corvallis, OR): One (1) found - See Location #1
 2. Page Fetch Time (fetchStart to ResponseEnd): 
 	a. On Campus: 
 	b. Off Campus: 
