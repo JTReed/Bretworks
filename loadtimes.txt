@@ -1,47 +1,30 @@
 Page Load Times Data--
 1. API Response Time (to when the callback funtion is invoked):
-	a. IP:
-		Telize Geolocation API:
-			1. On Campus: fetched in 727 ms
-			2. Off Campus: 590 ms
-			3. Mobile (T-Mobile): 632 ms
-			4. Outside of Madison (Corvallis, OR): 460 ms
-		OpenWeatherMap API (IP): 	
-			1. On Campus: 135 ms
-			2. Off Campus: 489 ms
-			3. Mobile (T-Mobile): 307 ms
-			4. Outside of Madison (Corvallis, OR): 742 ms
-		Google Places Map API (IP): 	
-			1. On Campus: 993 ms
-			2. Off Campus: 947 ms
-			3. Mobile (T-Mobile): 868 ms
-			4. Outside of Madison (Corvallis, OR): 317 ms
-		Google Places Geolocator (IP):	
-			1. On Campus: 43,46ms
-			2. Off Campus: No requests
-			3. Mobile (T-Mobile): No requests
-			4. Outside of Madison (Corvallis, OR): No requests
-	b. W3C:
-		Geolocation API:	
-			1. On Campus: 787 ms
-			2. Off Campus: 535 ms
-			3. Mobile (T-Mobile): 1414 ms
-			4. Outside of Madison (Corvallis, OR): 106504 ms
-		OpenWeatherMap API (W3C):	
-			1. On Campus: 375 ms
-			2. Off Campus: 1539 ms
-			3. Mobile (T-Mobile): 353 ms
-			4. Outside of Madison (Corvallis, OR): 546 ms
-		Google Places Map API (W3C):	
-			1. On Campus: 1010 ms
-			2. Off Campus: 951 ms
-			3. Mobile (T-Mobile): 872 ms
-			4. Outside of Madison (Corvallis, OR): 215 ms
-		Google Places Geolocator (W3C):	
-			1. On Campus: 55,62ms
-			2. Off Campus: 93,97 ms
-			3. Mobile: 130,134ms
-			4. Corvallis, OR: 335ms
+	Telize Geolocation API:
+		1. On Campus: 727 ms
+		2. Off Campus: 353 ms
+		3. Mobile (T-Mobile): 632 ms
+		4. Outside of Madison (Corvallis, OR): 460 ms
+	WC3 Geolocation API:
+		1. On Campus: 787 ms
+		2. Off Campus: 590 ms
+		3. Mobile (T-Mobile): 1414 ms
+		4. Outside of Madison (Corvallis, OR): 106504(outlier) ms
+	OpenWeatherMap API: 	
+		1. On Campus: 135, 357 ms
+		2. Off Campus: 489, 1539 ms
+		3. Mobile (T-Mobile): 307, 353 ms
+		4. Outside of Madison (Corvallis, OR): 546, 742 ms
+	Google Places Map API, get nearest locations: 	
+		1. On Campus: 993, 1010 ms
+		2. Off Campus: 947, 951 ms
+		3. Mobile (T-Mobile): 868, 872 ms
+		4. Outside of Madison (Corvallis, OR): 215, 317 ms
+	Google Places API, Geolocator:	
+		1. On Campus: 43, 46, 55, 62 ms
+		2. Off Campus: 93, 97 ms
+		3. Mobile (T-Mobile): 130, 134 ms
+		4. Outside of Madison (Corvallis, OR): 335 ms
 2. Page Fetch Time (fetchStart to ResponseEnd): 
 	a. On Campus: 173 ms
 	b. Off Campus: 484 ms
@@ -61,7 +44,7 @@ Page Load Times Data--
 Questions--
 1. For each location/connectivity combination, which REST API call takes the longest complete? Is the answer the same for all location/connectivity combinations? Does this mean the delay for this REST API call is primarily determined by the browser, the last-mile connection, or the remote service?
 2. For one of the REST API calls (e.g., IP-based geolocation), how long does it take for each location/connectivity combination? Over which network (i.e. last-mile connection) does the call complete the fastest? The slowest? What is one possible networking explanation for these results?
-3. If you add the time taken to fetch the page (metric #2) to the time taken to render the page (metric #3) does it equal the time reported for metric #4? Why or why not?\
+3. If you add the time taken to fetch the page (metric #2) to the time taken to render the page (metric #3) does it equal the time reported for metric #4? Why or why not
 
 
 
