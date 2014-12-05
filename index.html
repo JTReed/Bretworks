@@ -51,7 +51,6 @@
 				document.getElementById("fetchTime").innerHTML = Math.floor( fetchTime );
         		document.getElementById("renderTime").innerHTML = Math.floor( renderTime );
         		document.getElementById("fetchAndRenderTime").innerHTML = Math.floor( fetchAndRenderTime );
-        		document.getElementById("timerTest").innerHTML = Math.floor( performance.timing.responseEnd - performance.timing.domLoading);
 				
 				document.getElementById("ipAddr").innerHTML = ip;
 				document.getElementById("ipLong").innerHTML = ipLong;
@@ -315,8 +314,6 @@
 	<i>Time to fetch the page: <span id = "fetchTime"></span> ms</i><br>
 	<i>Time to render the page: <span id = "renderTime"></span> ms</i><br>
 	<i>Time to fetch & render the page: <span id = "fetchAndRenderTime"></span> ms</i><br>
-	<i>Testo!!!! <span id = "timerTest"></span> ms</i><br>
-	<br>
 	<br>
 	Location determined by IP (<span id = "ipAddr"></span>):<br>
 	Longitude: <span id = "ipLong"></span><br>
