@@ -1,10 +1,16 @@
-Distance Data--
+Distance Data
+-------------
 1. On Campus: 0.5706886604880204km
 2. Off Campus: 10.977824714940631km
 3. On Campus (Mobile, off campus - US Cellular): 853.400215247478km
 4. Outside of Madison (Corvallis, OR): 6.643194882200189km
 
-Questions--
+Questions
+---------
 1. Which location/connectivity combination had the lowest error (i.e., the shortest distance between the IP-based geolocation and the W3C-based geolocation)? What is one possible networking explanation for this low error?
+---
+ For each machine connected to the network, the router will provide a designated IP. The router’s IPs are provided by the ISP. In this case, the ISP is UW Madison. Since UW Madison purchased a large set of IPs early on, we are accurately pinpointed to be in Madison, WI based on IP alone. This is due to the fact that IPs used to be provided based on location. Since UW Madison’s set of IPs are considered to be some of the first publicly offered IP addresses, they correctly resolve to originate from Madison, WI.
 
 2. Which location/connectivity combination had the highest error (i.e., the largest distance between the IP-based geolocation and the W3C-based geolocation)? What is one possible networking explanation for this high error?
+---
+ The largest error (by far) was when testing on a mobile data network. While the device location was accurate, the location derived from the IP address was designated to be somewhere in Kansas. This location most likely refers to the region’s Packet-Data Network Gateway, which is the bridge between mobile and IP traffic.
